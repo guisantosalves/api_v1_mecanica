@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//direcionando
 app.use('/api/v1', funcRoutes);
 app.use('/api/v1', valor_retirado);
 

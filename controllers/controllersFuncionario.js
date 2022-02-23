@@ -1,76 +1,74 @@
-const database = require('../connection/db');
-const modelFunc = require('../model/modelFuncionario');
+const con = require('../connection/db');
 
-(async () => {
-    try {
-        const resultado = await database.sync();
-    } catch (error) {
-        console.log(error);
-    }
-})();
-
-module.exports.getFuncionario = async (req, res)=>{
+module.exports.getFuncionario = (req, res)=>{
     try{
-        const funcionario = await modelFunc.findAll();
-        res.status(200);
-        res.send(funcionario);
+        var sqlGet = "select * from funcionario"
+        con.connect((err)=>{
+            if(err) res.send(err);
+            con.query(sqlGet, (err, result)=>{
+                if(err) res.send(err);
+                res.send(result);
+                res.status(200);
+            });
+        });
     }catch(err){
-        res.status(400).json({erro: err});
+        res.status(400).json({erro: err.msg});
     }
 }
 
-module.exports.postFuncionario = async (req, res)=>{
+module.exports.postFuncionario = (req, res)=>{
     try{
-        var nome = req.body.nome_funcionario;
-        var cpf = req.body.cpf_funcionario;
+        var nome = req.body.nome;
+        var cpf = req.body.cpf;
         var telefone = req.body.telefone;
 
-        const resultadoCreate = await modelFunc.create({
-            nome_funcionario: nome,
-            cpf_funcionario: cpf,
-            telefone: telefone
-        })
-        res.status(200);
-        res.send(resultadoCreate);
+        con.connect(function(err) {
+            var sqlPost = `INSERT INTO funcionario (nome_funcionario, cpf_funcionario, telefone) VALUES ("${nome}", "${cpf}", "${telefone}")`;
+                con.query(sqlPost, (err, result)=>{
+                if(err) res.send(err);
+                res.send("cadastrado com sucesso");
+                res.status(200);
+            });
+        });
     }catch(err){
-        res.status(400).json({erro: err})
+        res.status(400).json({erro: err.msg});
     }
 }
 
 module.exports.putFuncionario = async (req, res)=>{
     try{
-        var nome = req.body.nome_funcionario;
-        var cpf = req.body.cpf_funcionario;
+        var nome = req.body.nome;
+        var cpf = req.body.cpf;
         var telefone = req.body.telefone;
         var id = req.body.id;
 
-        const resultadoUpdate = await modelFunc.update({nome_funcionario: nome, cpf_funcionario: cpf, telefone: telefone},
-        {where: {id_funcionario: id}});
-        
-        if(resultadoUpdate == 1){
-            res.status(200);
-            res.send('Registro alterado com sucesso');
-        }else{
-            res.send('Algo inesperado aconteceu');
-        }
+        con.connect((err)=>{
+            if(err) res.send(err);
+            var sqlPut = `UPDATE funcionario SET nome_funcionario = "${nome}", cpf_funcionario = "${cpf}", telefone = "${telefone}" WHERE id_funcionario = ${id}`;
+            con.query(sqlPut, (err, result)=>{
+                if(err) res.send(err);
+                res.send("alteração feita com sucesso");
+                res.status(200);
+            });
+        });
     }catch(err){
-        res.status(400).json({error: err});
+        res.status(400).json({erro: err.msg});
     }
 }
 
 module.exports.deleteFuncionario = async (req, res)=>{
-
     try{
         var id = req.body.id;
-
-        const resultadoDelete = await modelFunc.destroy({where: {
-            id_funcionario: id
-        }}).then((a)=>{
-            res.send('deletado com sucesso');
-            res.status(200);
+        con.connect((err)=>{
+            if(err) res.send(err);
+            var sqlDelete = `DELETE FROM funcionario WHERE id_funcionario = ${id};`;
+            con.query(sqlDelete, (err, result)=>{
+                if(err) res.send(err);
+                res.send("Deletado com sucesso")
+                res.status(200);
+            });
         });
     }catch(err){
-        res.status(400).json({erro: err});
+        res.status(400).json({error: err.msg});
     }
-    
 }

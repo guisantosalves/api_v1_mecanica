@@ -1,4 +1,10 @@
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize('mecanica', 'root', 'Paodequeijo123@', { host: 'localhost', dialect: 'mysql'});
+var mysql = require('mysql2');
 
-module.exports = sequelize;
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "Paodequeijo123@",
+    database: "mecanica"
+});
+
+module.exports = con;
