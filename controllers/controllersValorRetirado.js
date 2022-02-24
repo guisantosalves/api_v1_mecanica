@@ -12,13 +12,13 @@ module.exports.getValorRetirado = (req, res)=>{
             });
         });
     }catch(err){
-        res.status(400).json({erro: err.array()})
+        res.status(400).json({erro: err})
     }
 }
 
 module.exports.postValorRetirado = (req, res)=>{
     try{
-        var id_funcionario = req.body.id;
+        var id_funcionario = req.body.funcionario_id;
         var data_atividade = req.body.data;
         var valor_retirado = req.body.valor;
 
@@ -32,14 +32,41 @@ module.exports.postValorRetirado = (req, res)=>{
             });
         });
     }catch(err){
-        res.status(400).json({erro: err.array()})
+        res.status(400).json({erro: err})
     }
 }
 
 module.exports.putValorRetirado = (req, res)=>{
-    res.send("ESTOU NO PUT DO VALOR RETIRADO")
+    var valor_retirado = req.body.valorRetirado;
+    var id_valorRetirado = req.body.idValorRetirado
+    try{
+        var sqlPut = `UPDATE atividade_caixa SET valor_retirado = "${valor_retirado}" WHERE id_atividade = ${id_valorRetirado};`
+        con.connect((err)=>{
+            if(err) res.send(err);
+            con.query(sqlPut, (err, result)=>{
+                if(err) res.send(err);
+                res.send("Alteração feita com sucesso");
+                res.status(200);
+            })
+        });
+    }catch(err){
+        res.status(400).json({erro: err})
+    }
 }
 
 module.exports.deleteValorRetirado = (req, res)=>{
-    res.send("ESTOU NO DELETE DO VALOR RETIRADO")
+    try{
+        var id_valorRetirado = req.body.idValorRetirado;
+        var sqlDelete = `DELETE FROM atividade_caixa WHERE id_atividade = ${id_valorRetirado};`
+        con.connect((err)=>{
+            if(err) res.send(err);
+            con.query(sqlDelete, (err, result)=>{
+                if(err) res.send(err);
+                res.send("Registro excluído com sucesso");
+                res.status(200);
+            });
+        });
+    }catch(err){
+        res.status(400).json({erro: err})
+    }
 }

@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var funcRoutes = require('./routes/funcRoutes');
 var valor_retirado = require('./routes/valorRetiradoRoutes');
+var relatorio = require('./routes/relatorioRoutes')
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //direcionando
 app.use('/api/v1', funcRoutes);
 app.use('/api/v1', valor_retirado);
+app.use('/api/v1', relatorio);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

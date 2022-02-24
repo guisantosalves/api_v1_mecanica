@@ -12,7 +12,7 @@ module.exports.getFuncionario = (req, res)=>{
             });
         });
     }catch(err){
-        res.status(400).json({erro: err.array()});
+        res.status(400).json({erro: err});
     }
 }
 
@@ -31,7 +31,7 @@ module.exports.postFuncionario = (req, res)=>{
             });
         });
     }catch(err){
-        res.status(400).json({erro: err.array()});
+        res.status(400).json({erro: err});
     }
 }
 
@@ -52,7 +52,7 @@ module.exports.putFuncionario = async (req, res)=>{
             });
         });
     }catch(err){
-        res.status(400).json({erro: err.array()});
+        res.status(400).json({erro: err});
     }
 }
 
@@ -69,6 +69,6 @@ module.exports.deleteFuncionario = async (req, res)=>{
             });
         });
     }catch(err){
-        res.status(400).json({error: err.array()});
+        res.status(400).json({error: err});
     }
 }
