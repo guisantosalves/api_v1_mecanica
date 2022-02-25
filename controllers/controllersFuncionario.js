@@ -1,4 +1,5 @@
 const con = require('../connection/db');
+const {check, validationResult} = require('express-validator');
 
 module.exports.getFuncionario = (req, res)=>{
     try{
@@ -16,41 +17,55 @@ module.exports.getFuncionario = (req, res)=>{
     }
 }
 
+//validado
 module.exports.postFuncionario = (req, res)=>{
     try{
-        var nome = req.body.nome;
-        var cpf = req.body.cpf;
-        var telefone = req.body.telefone;
 
-        con.connect(function(err) {
-            var sqlPost = `INSERT INTO funcionario (nome_funcionario, cpf_funcionario, telefone) VALUES ("${nome}", "${cpf}", "${telefone}")`;
-                con.query(sqlPost, (err, result)=>{
-                if(err) res.send(err);
-                res.send("cadastrado com sucesso");
-                res.status(200);
+        const erros = validationResult(req);
+        if(!erros.isEmpty()){
+            return res.send(erros);
+        }else{
+            var nome = req.body.nome;
+            var cpf = req.body.cpf;
+            var telefone = req.body.telefone;
+
+            con.connect(function(err) {
+                var sqlPost = `INSERT INTO funcionario (nome_funcionario, cpf_funcionario, telefone) VALUES ("${nome}", "${cpf}", "${telefone}")`;
+                    con.query(sqlPost, (err, result)=>{
+                    if(err) res.send(err);
+                    res.send("cadastrado com sucesso");
+                    res.status(200);
+                });
             });
-        });
+        }      
+
     }catch(err){
         res.status(400).json({erro: err});
     }
 }
 
+//validado
 module.exports.putFuncionario = async (req, res)=>{
     try{
-        var nome = req.body.nome;
-        var cpf = req.body.cpf;
-        var telefone = req.body.telefone;
-        var id = req.body.id;
+        const erros = validationResult(req);
+        if(!erros.isEmpty()){
+            return res.send(erros.array())
+        }else{
+            var nome = req.body.nome;
+            var cpf = req.body.cpf;
+            var telefone = req.body.telefone;
+            var id = req.body.id;
 
-        con.connect((err)=>{
-            if(err) res.send(err);
-            var sqlPut = `UPDATE funcionario SET nome_funcionario = "${nome}", cpf_funcionario = "${cpf}", telefone = "${telefone}" WHERE id_funcionario = ${id}`;
-            con.query(sqlPut, (err, result)=>{
+            con.connect((err)=>{
                 if(err) res.send(err);
-                res.send("alteração feita com sucesso");
-                res.status(200);
+                var sqlPut = `UPDATE funcionario SET nome_funcionario = "${nome}", cpf_funcionario = "${cpf}", telefone = "${telefone}" WHERE id_funcionario = ${id}`;
+                con.query(sqlPut, (err, result)=>{
+                    if(err) res.send(err);
+                    res.send("alteração feita com sucesso");
+                    res.status(200);
+                });
             });
-        });
+        }
     }catch(err){
         res.status(400).json({erro: err});
     }
