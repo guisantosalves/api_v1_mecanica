@@ -19,7 +19,7 @@ module.exports.getRelatorioFuncionario = (req, res) =>{
 //relatório atividade
 module.exports.getValorRetiradoRelatorio = (req, res)=>{
     try{
-        var relatorioFunc = `select * from atividade_caixa`;
+        var relatorioFunc = `select * from atividade_caixa order by valor_retirado desc`;
         con.connect((err)=>{
             if(err) res.send(err);
             con.query(relatorioFunc, (err, result)=>{
@@ -35,7 +35,7 @@ module.exports.getValorRetiradoRelatorio = (req, res)=>{
 //join entre os dois formando uma view
 module.exports.getRelatorioLog = (req, res)=>{
     try{
-        var relFuncionarioAtividade = `select * from relatorio_retirada;`;
+        var relFuncionarioAtividade = `select * from relatorio_retirada order by valor_retirado desc`;
         con.connect((err)=>{
             if(err) res.send(err);
             con.query(relFuncionarioAtividade, (err, result)=>{

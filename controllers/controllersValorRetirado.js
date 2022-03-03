@@ -4,7 +4,7 @@ const {check, validationResult} = require('express-validator')
 module.exports.getValorRetirado = (req, res)=>{
     try{
         con.connect((err)=>{
-            var sqlGet = "select * from atividade_caixa";
+            var sqlGet = "select * from atividade_caixa;";
             if(err) res.send(err);
             con.query(sqlGet, (err, result)=>{
                 if(err) res.send(err);
